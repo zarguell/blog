@@ -37,6 +37,8 @@ In this post, I'll assume you already have apps configured with public hostnames
 
 - Understanding TLS interception, cert pinning, and other issues
 
+![do-not-inspect](assets/img/do-not-inspect.png)
+
 ## References
 
 ⚙️ Link 1
