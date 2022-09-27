@@ -12,6 +12,7 @@ coverage
 cassettes
 yarn-error.log
 .compiled
+_draft*
 
 _site
 .sass-cache
