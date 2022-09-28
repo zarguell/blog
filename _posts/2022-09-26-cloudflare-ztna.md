@@ -48,7 +48,7 @@ Luckily, Cloudflare provides a simple "one-click" button. When onboarding on Tea
 
 ![cert-pinning](/assets/img/cert-pinning.png)
 
-The policy defines a list of applications correlating to domains known to cause issue with cert pinning, and defines a policy to bypass, or not inspect the traffic. Implementing this HTTP policy will result most common certificate pinning issues. I saw most - because it is not an end-to-end list. As you utilizing the gateway - you will notice normal traffic breaking, often due to certificate pinning. By observing logs and testing bypass of domains, you can walkthrough and remediate some of these issues.
+The policy defines a list of applications correlating to domains known to cause issue with cert pinning, and defines a policy to bypass, or not inspect the traffic. Implementing this HTTP policy will resolve most common certificate pinning issues. I saw most - because it is not an end-to-end list. As you utilizing the gateway - you will notice normal traffic breaking, often due to certificate pinning. By observing logs and testing bypass of domains, you can walkthrough and remediate some of these issues.
 
 ## Device Enrollment
 
