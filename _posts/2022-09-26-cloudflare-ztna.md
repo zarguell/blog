@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "ZTNA to Services Through Cloudflare"
-date: 2022-09-27 18:00:00 -0500
+date: 2022-09-27 21:53:00 -0500
 categories: homelab
 tags: homelab cloudflare zero trust ztna warp sase
 ---
