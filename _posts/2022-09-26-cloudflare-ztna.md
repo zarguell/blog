@@ -6,7 +6,7 @@ categories: homelab
 tags: homelab cloudflare zero trust ztna warp sase
 ---
 
-## Overview
+## Overview 🔍
 
 If vendor marketing is any indication, "Zero Trust" is the biggest buzzword in security lately. But not without reason; a well implemented security architecture with strong identity verification and zero trust principles is the foundation of good security today. It's amsuing to me how many breaches in the past few months reported in the news have had the same things; valid account, compromise of phishable 2-factor credentials, compromise of enterprise VPN, establish foothold, move laterally.
 
@@ -14,7 +14,7 @@ As Cloudflare tags their practice of ["dogfooding"](https://blog.cloudflare.com/
 
 In this post, I'll assume you already have [Cloudflare for Teams](https://blog.cloudflare.com/introducing-cloudflare-for-teams/), with apps configured with public hostnames configured via Cloudflare Tunnels (and perhaps some policies to govern access already). What I want to highlight is the addition of "gateway" access by configuration of managed devices within a team/organization through the "Warp" client.
 
-## Initial Setup
+## Initial Setup 👷
 
 In order to confgiure apps for ZTNA access through the Warp client, you will need clients to utilize Cloudflare's Secure Web Gateway (SWG). For more information on developing Gateway Policies, see the [Cloudflare Docs](https://developers.cloudflare.com/cloudflare-one/policies/filtering/).
 
@@ -32,13 +32,13 @@ You will also want to configure a device posture check under ```Settings -> WARP
 
 Note that device posture checks open up a door to enhance security; allowing more granular access to services based on risk, including enforcing a certain (up-to-date) OS version, precense of security controls, and more.
 
-## Certificate Trust
+## Certificate Trust 🤝
 
 Next in the setup process, you will need to add the Cloudflare for Teams certificate as a trusted root certificate in the device you are enrolling for access. Cloudflare provides standard .crt and .pem files in the docs linked [here](https://developers.cloudflare.com/cloudflare-one/connections/connect-devices/warp/install-cloudflare-cert), and should be installed as instructed per device vendor.
 
 Installation of this certificate is necessary to allow for HTTP inspection. Platforms such as Android may provide warning that installation of a certificate will allow third parties to view private data sent to websites. This is true - Cloudflare SWG, when performing HTTP inspection, is an "adversary-in-the-middle" for all HTTP requests on the client. In our scenario, this is desirable, as it is only through HTTP inspection that we can direct apps to private gateway access, as well as enforce DLP controls, malware inspection, lockdown allowed tenants, and more.
 
-## Certificate Pinning
+## Certificate Pinning 📌
 
 For those familiar with TLS interception, whether through transparent proxy, or SWG platform - these issues are nothing new. But I believe it is worth pointing on the "issue" that TLS interception, and the introduction of "adversary-in-the-middle" has on various services, particularly client applications.
 
@@ -50,7 +50,7 @@ Luckily, Cloudflare provides a simple "one-click" button. When onboarding on Tea
 
 The policy defines a list of applications correlating to domains known to cause issue with cert pinning, and defines a policy to bypass, or not inspect the traffic. Implementing this HTTP policy will resolve most common certificate pinning issues. I saw most - because it is not an end-to-end list. As you utilizing the gateway - you will notice normal traffic breaking, often due to certificate pinning. By observing logs and testing bypass of domains, you can walkthrough and remediate some of these issues.
 
-## Device Enrollment
+## Device Enrollment 📱
 
 Now that you've trusted the Cloudflare teams certificate, and understand and have bypassed the requisite apps for certificate pinning, you are ready to enroll the client and begin passing HTTP traffic through Cloudflare gateway.
 
@@ -58,7 +58,7 @@ For small homelab usage, I'm going to assume you're running manual deployments o
 
 The Cloudflare Docs for [manual installation](https://developers.cloudflare.com/cloudflare-one/connections/connect-devices/warp/deployment/manual-deployment/) describe the process; either CLI or GUI based per platform. Ultimately, the WARP client will need to be configured to use the "Cloudflare for Teams" login, and you will authenticate to meet the defined device enrollment criteria via configured identity providers, and be granted access to the Cloudflare team via WARP.
 
-## Policy Configuration
+## Policy Configuration 🥂
 
 So you have your device enrolled, and you're inspecting HTTP traffic through the gateway. The final step is enable the "requirement" of the gateway to an access application, and use that as a condition to bypass authentication.
 
