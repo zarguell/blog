@@ -79,8 +79,8 @@ Once you have configured the profile, you can verify the configuration by listin
 
 ```
 ./influx config
-Active	Name		URL						    Org
-*	    onboarding	https://your-platform-url	your-org
+Active	Name        URL               Org
+*	onboarding        https://your-platform-url        your-org
 ```
 
 To collect data to InfluxDB, we will create a bucket called speedtest to send speedtest data to:
@@ -118,13 +118,15 @@ m=$(/root/speedtest -f csv 2>&1)
 echo -e $a0"\n"$a1"\n"$a2"\n"$m | /root/influx write --bucket speedtest --format csv -
 ```
 
-Finally, to automate the process, I added an hourly cron job to Openwrt to run the shell script, and restarted cron to apply:
+Finally, to automate the process, I added the following hourly cron job to OpenWrt to run the shell script, and restarted cron to apply:
 
 ```
 0 * * * * /root/speedtest_influx.sh
 ```
 
-After taking some time to let the data populate, I created a simple dashboard to show various speed stats. The result looks like so:
+After taking some time to let the data populate, I created a simple dashboard to show various speed stats - showing the latest download & upload in a dial, and chart the speeds over time. The result looks like so:
+
+![dashboard](/assets/img/speedtest-dashboard.png)
 
 From here, there are many additional enhancements that could be implemented, such as custom alerting upon a certain threshold, or a dead man hook to alert on absence of ingest. For now - I will leave it simply, and just monitor the speed data over time.  I do plan to implement additional monitoring capability here when I get to it - perhaps integrate into my existing LibreNMS stack, Healthchecks.io, or capture some logs to my Grafana Cloud instance. As it stands, I’m pretty satisfied to be able these metrics with just two single binaries and a cron job.
 
