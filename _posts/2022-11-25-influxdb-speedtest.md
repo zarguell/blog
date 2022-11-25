@@ -10,7 +10,7 @@ tags: homelab openwrt speedtest monitoring influxdb
 
 This Thanksgiving, I was at my Mom’s and wanted to tackle a lightweight monitoring solution for tracking various Speedtest.net metrics. Having recently moved and changed ISPs - she had experienced particular issues in having multiple outages on a daily basis, throughput issues, and the like.
 
-To help with this, the first thing I did was configure a Raspberry Pi Compute Module 4 with the DFRobot IOT Router Board to act as router, gateway, firewall, dns, etc - and just move her consumer Orbi to just Access Point mode. This is a great little board perfect for lightweight routing - Jeff Geerling has a great write up on the board and I would highly recommend replacing your off-the-shelf router with one if you can get your hands on a Compute Module board.
+To help with this, the first thing I did was configure a Raspberry Pi Compute Module 4 with the DFRobot IOT Router Board to act as router, gateway, firewall, dns, etc - and just move her consumer Orbi to just Access Point mode. This is a great little board perfect for lightweight routing - Jeff Geerling has a [great write up on the board](https://www.jeffgeerling.com/blog/2021/two-tiny-dual-gigabit-raspberry-pi-cm4-routers) and I would highly recommend replacing your off-the-shelf router with one if you can get your hands on a Compute Module board.
 
 On top of this, I wanted a keep-it-simple-stupid monitoring solution: one that’s lightweight, not full of countless dependencies, as deploying it as my Mom’s, I would prefer a “set and forget” solution rather than one requiring constant maintenance (I’m extremely paranoid to the point of a failed SD card rendering the box non-functional - so I really don’t want a lot running on the box).
 
@@ -79,23 +79,23 @@ Once you have configured the profile, you can verify the configuration by listin
 
 ```bash
 ./influx config
-Active	Name        URL                   Org
+Active	Name        URL                         Org
 *	onboarding  https://your-platform-url  your-org
 ```
 
 To collect data to InfluxDB, we will create a bucket called speedtest to send speedtest data to:
 
-```
+```bash
 influx bucket create \
   --name speedtest \
   --description "OpenWrt Speedtest.net Bucket"
-  ```
+```
 
 With the bucket created, we can begin sending the csv data to the bucket. InfluxDB can utilize an annotated csv format in order to capture tags, measurements, and datatypes that should be indexed by InfluxDB.
 
 So, we need to figure out how the Speedtest csv data should be annotated to properly index. To get this, I ran the csv output with header information, and mapped each field to the InfluxDB data types as so:
 
-```annotated csv
+```
 #constant measurement,speed
 #datatype tag,tag,double,double,double,long,long,long,long,tag,long,double,double,double,double,double,double,double,double,double,double
 "server name","server id","idle latency","idle jitter","packet loss","download","upload","download bytes","upload bytes","share url","download server count","download latency","download latency jitter","download latency low","download latency high","upload latency","upload latency jitter","upload latency low","upload latency high","idle latency low","idle latency high"
