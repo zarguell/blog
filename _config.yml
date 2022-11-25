@@ -21,7 +21,7 @@ timezone: America/New_York
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: Random Tech Thoughts                        # the main title
+title: Random Thoughts                        # the main title
 
 tagline: dd if=/dev/urandom of=/dev/blog   # it will display as the sub-title
 
