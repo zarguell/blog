@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Monitoring Speedtest.net through InfluxDB on OpenWrt"
-date: 2022-11-25 09:00:00 -0500
+date: 2022-11-24 09:00:00 -0500
 categories: homelab
 tags: homelab openwrt speedtest monitoring influxdb
 ---
