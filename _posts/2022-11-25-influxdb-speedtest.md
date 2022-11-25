@@ -137,4 +137,4 @@ From here, there are many additional enhancements that could be implemented, suc
 
 For more details on the project & script artifacts, please visit my git repo here:
 
-https://github.com/zarguell/influxdb-speedtest
+[https://github.com/zarguell/influxdb-speedtest](https://github.com/zarguell/influxdb-speedtest)
