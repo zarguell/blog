@@ -21,9 +21,9 @@ timezone: America/New_York
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: Zach's Security Blog                        # the main title
+title: Random Thoughts                        # the main title
 
-tagline: zero trust for the rest of us!   # it will display as the sub-title
+tagline: dd if=/dev/urandom of=/dev/blog   # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
   my ramblings about cyber, cloudsec, automation, zero trust, red teaming, or whatever else i feel like
