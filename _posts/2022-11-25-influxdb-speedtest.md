@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Monitoring Speedtest.net through InfluxDB on OpenWrt"
+title: "Monitoring Speedtest Results through InfluxDB on OpenWrt"
 date: 2022-11-24 09:00:00 -0500
 categories: homelab
 tags: homelab openwrt speedtest monitoring influxdb
@@ -22,14 +22,14 @@ Speedtest CLI now has precompiled binaries that are statically linked, and can b
 
 Installation is straightforward, download the tarball from Speedtest and untar. I just leave it in /root as I persist this directory for Openwrt - but it can also be added to standard /bin directories:
 
-```
+```bash
 wget https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-linux-aarch64.tgz
 tar xvzf ookla-speedtest-1.2.0-linux-aarch64.tgz
 ```
 
 Once you have the binary, run the Speedtest CLI and follow the prompts:
 
-```
+```bash
 ./speedtest
 ==============================================================================
 
@@ -52,7 +52,7 @@ First usage of the tool will require you to interactively accept the EULA - afte
 
 To run the tool, I decided to use the .csv output format, because it is extremely easy to parse into InfluxDB, which I will dive into:
 
-```
+```bash
 ./speedtest -f csv
 ```
 
@@ -60,14 +60,14 @@ To run the tool, I decided to use the .csv output format, because it is extremel
 
 Similarly to Speedtest, InfluxDB can also be installed as a single binary. For the Compute Module 4, grab the arm64 binary, and also untar just the same:
 
-```
+```bash
 wget https://dl.influxdata.com/influxdb/releases/influxdb2-client-2.5.0-linux-arm64.tar.gz
 tar xvzf influxdb2-client-2.5.0-linux-arm64.tar.gz
 ```
 
 Once you have the binary, you need to create an API token, and create a InfluxDB configuration. The easiest way to do this is walked through within the InfluxDB onboarding docs, which will do the work of creating an API token and providing the configuration command like so:
 
-```
+```bash
 ./influx config create --config-name onboarding \
     --host-url "https://your-platform-url" \
     --org "your-org" \
@@ -77,10 +77,10 @@ Once you have the binary, you need to create an API token, and create a InfluxDB
 
 Once you have configured the profile, you can verify the configuration by listing profiles:
 
-```
+```bash
 ./influx config
-Active	Name        URL               Org
-*	onboarding        https://your-platform-url        your-org
+Active	Name        URL                   Org
+*	onboarding  https://your-platform-url  your-org
 ```
 
 To collect data to InfluxDB, we will create a bucket called speedtest to send speedtest data to:
@@ -95,15 +95,20 @@ With the bucket created, we can begin sending the csv data to the bucket. Influx
 
 So, we need to figure out how the Speedtest csv data should be annotated to properly index. To get this, I ran the csv output with header information, and mapped each field to the InfluxDB data types as so:
 
-```
+```annotated csv
 #constant measurement,speed
 #datatype tag,tag,double,double,double,long,long,long,long,tag,long,double,double,double,double,double,double,double,double,double,double
 "server name","server id","idle latency","idle jitter","packet loss","download","upload","download bytes","upload bytes","share url","download server count","download latency","download latency jitter","download latency low","download latency high","upload latency","upload latency jitter","upload latency low","upload latency high","idle latency low","idle latency high"
 ```
 
+The secret sauce here is basically:
+- Line 1: Set a constant measurement for all data to be called speed
+- Line 2: Define each csv column header as the data type (longs and doubles where decimal). For the server related attributes, I left them as tags to be indexed.
+- Line 3: These csv headers came direct from the speedtest cli output
+
 With the annotation complete, the data is ready to send. To run it, I created a simple shell script to capture the annotations, run the speedtest, and send the full output through standard in to the influx command like so:
 
-```
+```bash
 #!/bin/sh
 
 # define annotation headers
@@ -120,7 +125,7 @@ echo -e $a0"\n"$a1"\n"$a2"\n"$m | /root/influx write --bucket speedtest --format
 
 Finally, to automate the process, I added the following hourly cron job to OpenWrt to run the shell script, and restarted cron to apply:
 
-```
+```bash
 0 * * * * /root/speedtest_influx.sh
 ```
 
@@ -130,6 +135,6 @@ After taking some time to let the data populate, I created a simple dashboard to
 
 From here, there are many additional enhancements that could be implemented, such as custom alerting upon a certain threshold, or a dead man hook to alert on absence of ingest. For now - I will leave it simply, and just monitor the speed data over time.  I do plan to implement additional monitoring capability here when I get to it - perhaps integrate into my existing LibreNMS stack, Healthchecks.io, or capture some logs to my Grafana Cloud instance. As it stands, I’m pretty satisfied to be able these metrics with just two single binaries and a cron job.
 
-If you want to copy the project, please visit my git repo here:
+For more details on the project & script artifacts, please visit my git repo here:
 
-
+https://github.com/zarguell/influxdb-speedtest
