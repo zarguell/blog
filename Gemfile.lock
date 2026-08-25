@@ -88,7 +88,7 @@ GEM
       unicode-display_width (~> 1.1, >= 1.1.1)
     typhoeus (1.4.0)
       ethon (>= 0.9.0)
-    tzinfo (2.0.5)
+    tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     tzinfo-data (1.2022.4)
       tzinfo (>= 1.0.0)
@@ -102,6 +102,7 @@ PLATFORMS
 
 DEPENDENCIES
   html-proofer (~> 3.19)
+  jekyll
   jekyll-theme-chirpy (~> 5.1, >= 5.1.0)
   tzinfo (~> 2.0)
   tzinfo-data
